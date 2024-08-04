@@ -14,7 +14,7 @@ embed_dataframe <- function(df, dimension = 1) {
 
   df_out <- data.frame(matrix(0, new_number_of_rows, new_number_of_cols))
 
-  for (i in seq_len(m)) {
+  for (i in seq_len(n_cols)) {
     source_column_i <- as.vector(df[, i])
     
     for (j in  seq_len(dimension)-1 ) {    
