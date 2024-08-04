@@ -9,12 +9,6 @@ embed_dataframe <- function(df, dimension = 1) {
   n_rows <- nrow(df)
   n_cols <- ncol(df)
   
-  new_colnames <- colnames(df)
-  for (i in 1:(dimension-1)) {
-    temp <- paste(colnames(df), ".l", i, sep = "")
-    new_colnames <- c(new_colnames, temp)
-  }
-  
   new_number_of_rows <- n_rows - dimension + 1L
   new_number_of_cols <- dimension * n_cols
 
@@ -30,8 +24,14 @@ embed_dataframe <- function(df, dimension = 1) {
       df_out[, col_number] <- shortened_column
     }
   }
-  
+
+  new_colnames <- colnames(df)
+  for (i in 1:(dimension-1)) {
+    temp <- paste(colnames(df), ".l", i, sep = "")
+    new_colnames <- c(new_colnames, temp)
+  }
   colnames(df_out) <- new_colnames
+  
   return(df_out)
 }
 
