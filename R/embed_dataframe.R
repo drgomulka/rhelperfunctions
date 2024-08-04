@@ -38,3 +38,4 @@ embed_dataframe <- function(df, dimension = 1) {
 #dff <-  data.frame(x = 1:10,y = 11:20,  z = 21:30)
 #dff
 #embed_dataframe(dff, dimension = 4)
+#embed_dataframe(dff, dimension = 4)  == embed (as.matrix(dff), dimension =4) 
