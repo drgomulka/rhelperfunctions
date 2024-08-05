@@ -35,7 +35,28 @@ embed_dataframe <- function(df, dimension = 1) {
   return(df_out)
 }
 
+embed_dataframe_chunk <- function(df, dimension = 1) {
+  if (!is.data.frame(df)) {
+    stop("'df' must be a data frame")
+  }
+  if ((dimension < 1) || (dimension >  nrow(df))) {
+    stop("Invalid embedding dimension")
+  }
+  
+  new_df <- df [(dimension):(nrow(df)) , ]
+
+  for (i in seq_len(dimension-1) ) {    
+    a_range <- (dimension-i):(nrow(df)-i  )
+    a_chunk  <- dff[a_range,]  
+    colnames(a_chunk) <- paste(colnames(a_chunk), ".l", i, sep = "")
+    new_df <- cbind(new_df, a_chunk)
+  }
+  return(new_df)
+}
+
+
 #tests
+
 #dff <-  data.frame(x = 1:10,y = 11:20,  z = 21:30)
 #dff
 #embed_dataframe(dff, dimension = 4)
@@ -47,3 +68,5 @@ embed_dataframe <- function(df, dimension = 1) {
 #attr(embed_df_testobject,"dimnames" ) <- NULL
 #testthat::expect_equal(embed_df_testobject,  embed (as.matrix(dff), dimension =4) )
 
+
+#embed_dataframe_chunk(dff, dimension=4)
