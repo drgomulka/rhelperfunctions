@@ -41,3 +41,9 @@ embed_dataframe <- function(df, dimension = 1) {
 #embed_dataframe(dff, dimension = 4)
 #embed_dataframe(dff, dimension = 4)  == embed (as.matrix(dff), dimension =4) 
 #testthat::expect_equal(embed_dataframe(dff, dimension = 4),  embed (as.matrix(dff), dimension =4) )
+
+#embed_df_testobject <- as.matrix(embed_dataframe(dff, dimension = 4))
+#colnames(embed_df_testobject) <- NULL
+#attr(embed_df_testobject,"dimnames" ) <- NULL
+#testthat::expect_equal(embed_df_testobject,  embed (as.matrix(dff), dimension =4) )
+
