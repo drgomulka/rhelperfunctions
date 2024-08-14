@@ -47,7 +47,7 @@ embed_dataframe_chunk <- function(df, dimension = 1) {
 
   for (i in seq_len(dimension-1) ) {    
     a_range <- (dimension-i):(nrow(df)-i  )
-    a_chunk  <- dff[a_range,]  
+    a_chunk  <- df[a_range,]  
     colnames(a_chunk) <- paste(colnames(a_chunk), ".l", i, sep = "")
     new_df <- cbind(new_df, a_chunk)
   }
