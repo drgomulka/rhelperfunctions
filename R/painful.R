@@ -25,3 +25,6 @@ structure(list(a = 1:5, b = 5:1), class = "data.frame", row.names = c(NA,
 1L
 > dput (df_ab[1,] )
 structure(list(a = 1L, b = 5L), row.names = 1L, class = "data.frame")
+
+# this is good: 
+df_a[1,,drop = FALSE]
