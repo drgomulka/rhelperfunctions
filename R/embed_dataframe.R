@@ -1,4 +1,4 @@
-embed_dataframe <- function(df, dimension = 1) {
+embed_dataframe_loop <- function(df, dimension = 1) {
   if (!is.data.frame(df)) {
     stop("'df' must be a data frame")
   }
@@ -35,21 +35,22 @@ embed_dataframe <- function(df, dimension = 1) {
   return(df_out)
 }
 
-embed_dataframe_chunk <- function(df, dimension = 1) {
+embed_dataframe <- function(df, dimension = 1) {
   if (!is.data.frame(df)) {
     stop("'df' must be a data frame")
   }
   if ((dimension < 1) || (dimension >  nrow(df))) {
     stop("Invalid embedding dimension")
   }
+ 
+  tail_range <- dimension:nrow(df) 
+  new_df <- df[tail_range,]
   
-  new_df <- df [(dimension):(nrow(df)) , ]
-
   for (i in seq_len(dimension-1) ) {    
-    a_range <- (dimension-i):(nrow(df)-i  )
-    a_chunk  <- df[a_range,]  
-    colnames(a_chunk) <- paste(colnames(a_chunk), ".l", i, sep = "")
-    new_df <- cbind(new_df, a_chunk)
+    lag_window_range <- tail_range  - i #  (dimension-i):(nrow(df)-i  )
+    lag_window_chunk  <- df[lag_window_range,]  
+    colnames(lag_window_chunk) <- paste(colnames(lag_window_chunk), ".l", i, sep = "")
+    new_df <- cbind(new_df, lag_window_chunk)
   }
   return(new_df)
 }
