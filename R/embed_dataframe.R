@@ -1,3 +1,41 @@
+
+#' Przetwarza df na df z lagami
+#'
+#' @param df  przetwarzana df
+#' @param dimension  równa liczbie lagów plus 1
+#' @param lags  ile ma byc lagów
+#' @param exclude  nazwy kolumn bez lagów
+#'
+#' @return df z lagami
+#' @export
+embed_dataframe_exclude <- function(df, dimension = 1, lags = NULL, exclude = character()) {
+  if (!is.data.frame(df)) {
+    stop("'df' must be a data frame")
+  }
+  if ((dimension < 1) || (dimension >  nrow(df))) {
+    stop("Invalid embedding dimension")
+  }
+  
+  if ( !is.null(lags) ) {
+    dimension <-  lags+1
+  }
+  
+  tail_range <- dimension:nrow(df) 
+  new_df <- df[tail_range,]
+  exclude_colnums <- which(colnames(df) %in% exclude   )
+  
+  work_df <- df[, -exclude_colnums, drop=F ]
+  
+  for (i in seq_len(dimension-1) ) {    
+    lag_window_range <- tail_range  - i #  (dimension-i):(nrow(df)-i  )
+    lag_window_chunk  <- work_df[lag_window_range, , drop=F]  
+    colnames(lag_window_chunk) <- paste0(colnames(lag_window_chunk), ".L", stringr::str_pad(i, 2, pad="0")  )
+    new_df <- cbind(new_df, lag_window_chunk)
+  }
+  return(new_df)
+}
+
+
 embed_dataframe_loop <- function(df, dimension = 1) {
   if (!is.data.frame(df)) {
     stop("'df' must be a data frame")
