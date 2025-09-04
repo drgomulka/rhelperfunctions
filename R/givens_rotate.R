@@ -25,5 +25,4 @@ givens_x_to_r <-  function(X) {
       }
   }
   Rout[1:ncol(Rout),]
-  Rout
 }
