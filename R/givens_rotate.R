@@ -12,3 +12,18 @@ givens_single_rotation <- function(X, idcol) {
   #X_returned[2,idcol] <- 0
   X_returned
 }
+
+
+givens_x_to_r <-  function(X) {
+  stopifnot(is.matrix(X))
+  
+  Rout <- X
+  for (idcol in 1:ncol(X) )  {
+    for (idrow in nrow(X):(idcol+1)) { 
+      temp <- givens_single_rotation(Rout[c(idcol,idrow),],  idcol)  
+      Rout[c(idcol,idrow),]  <- temp
+      }
+  }
+  Rout[1:ncol(Rout),]
+  Rout
+}
