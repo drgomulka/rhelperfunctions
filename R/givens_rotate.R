@@ -6,7 +6,8 @@ givens_single_rotation <- function(X, idcol) {
   
   c <- X[1, idcol]
   s <- X[2, idcol]
-  d <- sqrt(c^2 + s^2)
+  #d <- sqrt(c^2 + s^2)
+  d <- norm( c(c, s), type="2")
   Grotation <-  matrix(c(c, -s, s, c), 2, 2 )/d
   X_returned <- Grotation %*% X 
   #X_returned[2,idcol] <- 0
