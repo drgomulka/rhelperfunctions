@@ -27,3 +27,53 @@ givens_x_to_r <-  function(X) {
   }
   Rout[1:ncol(Rout),]
 }
+
+
+givens_rotate_down <- function(X, idcol) {
+  stopifnot(is.matrix(X))
+  stopifnot("idcol must be not larger than the number of columns of X" = ncol(X) >= idcol)
+  stopifnot(nrow(X) == 2)
+  
+  c <- X[2, idcol]
+  s <- X[1, idcol]
+  #d <- sqrt(c^2 + s^2)
+  d <- norm( c(c, s), type="2")
+  Grotation <- matrix(c(c, s, -s, c), 2, 2 )/d
+  X_returned <- Grotation %*% X 
+  #X_returned[1,idcol] <- 0
+  X_returned
+}
+
+swap_adjacent <- function(X, idcol) {
+  stopifnot(is.matrix(X))
+  stopifnot(nrow(X) < idcol)
+  stopifnot(1 > idcol)
+  
+  Rout <- X
+  if (idcol == 1) return(Rout)
+  col_range <- row_range  <- c((idcol-1), idcol)
+  
+  temp <- givens_rotate_down(Rout[row_range,],  idcol)  
+  Rout[row_range,]  <- temp
+  # flip col and row order
+  Rout[row_range,]  <- Rout[rev(row_range),]
+  Rout[,col_range]  <- Rout[,rev(col_range)]
+  Rout
+}
+
+vmove_from_to <- function(X, from_col, to_col ) {
+  Rout <- X
+
+  if (from_col == to_col) return(Rout)
+  if (from_col < to_col) {
+    swap_range <- (from_col + 1):to_col 
+  } else {
+    swap_range <- from_col:(to_col + 1)
+  }
+  
+  for (idcol in  swap_range) {
+    Rout <- swap_adjacent(Rout, idcol)
+  }
+  
+  Rout
+}
