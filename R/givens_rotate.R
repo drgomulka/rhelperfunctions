@@ -3,6 +3,7 @@ givens_single_rotation <- function(X, idcol) {
   stopifnot(is.matrix(X))
   stopifnot("idcol must be not larger than the number of columns of X" = ncol(X) >= idcol)
   stopifnot(nrow(X) == 2)
+  stopifnot(1 <= idcol)
   
   c <- X[1, idcol]
   s <- X[2, idcol]
@@ -13,7 +14,6 @@ givens_single_rotation <- function(X, idcol) {
   #X_returned[2,idcol] <- 0
   X_returned
 }
-
 
 givens_x_to_r <-  function(X) {
   stopifnot(is.matrix(X))
@@ -46,8 +46,8 @@ givens_rotate_down <- function(X, idcol) {
 
 swap_adjacent <- function(X, idcol) {
   stopifnot(is.matrix(X))
-  stopifnot(nrow(X) < idcol)
-  stopifnot(1 > idcol)
+  stopifnot(ncol(X) >= idcol)
+  stopifnot(1 <= idcol)
   
   Rout <- X
   if (idcol == 1) return(Rout)
@@ -58,6 +58,7 @@ swap_adjacent <- function(X, idcol) {
   # flip col and row order
   Rout[row_range,]  <- Rout[rev(row_range),]
   Rout[,col_range]  <- Rout[,rev(col_range)]
+  colnames(Rout[col_range])  <- colnames(Rout[rev(col_range)])
   Rout
 }
 
@@ -73,7 +74,40 @@ vmove_from_to <- function(X, from_col, to_col ) {
   
   for (idcol in  swap_range) {
     Rout <- swap_adjacent(Rout, idcol)
-  }
-  
+  } 
   Rout
+}
+
+reorder_ry <- function(pos1,  listv, vorder )  {
+
+  #npx      <- ncol(X)
+  npv       <- length(vorder)
+  size_list <- length(listv)
+  nextv     <- pos1
+  
+  # Work through tail ofVORDER finding variables which are in LISTV.
+  for (i in pos1:npv) {
+
+    # skip over vorder positions that are not on list
+    if (!vorder[i] %in% listv)      next 
+
+    # dont vmove when (i == nextv), but vmove when i larger than nextv
+    if (i > nextv)  { 
+      #X <- vmove_from_to(X = X, from_col = i, to_col = nextv) 
+      temp1  <- c(1:(nextv-1), i, setdiff(nextv:npv, i))
+      vorder <- vorder[temp1]
+    }  
+    
+    # advance nextv by 1, because the spot is taken 
+    nextv  <- nextv + 1 
+    
+    # exit function earlier when list used up
+    if (nextv >= pos1 + size_list)  return(vorder)  
+  }
+
+  # list had more variables than were found in 
+  if (nextv < pos1 + size_list) stop(paste("moved",nextv - pos1, "variables, list had",  size_list  )  )
+
+  stop("this stop should never be triggered")
+  # return(vorder)
 }
