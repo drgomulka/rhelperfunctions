@@ -111,3 +111,48 @@ reorder_ry <- function(pos1,  listv, vorder )  {
   stop("this stop should never be triggered")
   # return(vorder)
 }
+
+
+
+add1_ry <- function(Ry, first, last ) {
+  
+  nostatnia <- ncol(Ry) 
+  np <- nostatnia - 1
+  stopifnot(last  > first)
+  stopifnot(first >= 1)
+  stopifnot(first <= np ) 
+  stopifnot(last  <= np) 
+  stopifnot(is.matrix(Ry))
+  
+  # bez ostatniej kolumn i bez ostatniego wiersza
+  R      <- Ry[-nostatnia, -nostatnia]
+  thetab <- Ry[1:(np), nostatnia]
+  
+  # ostatnie narozne pole macierzy to reszta z transformacji Xy do Ry
+  # zbedne tu 
+  # sserr <-  Ry[nostatnia, nostatnia]
+  
+  #ss <- rep(0, np)
+  sxx <- rep(0, np)
+  sxy <- rep(0, np)
+  
+  # moje 
+  for (col in first:last) {
+    temp <-  R[first:last, col]
+    stopifnot( is.vector(temp) )
+    sxx[col]  <- sum(temp^2, na.rm = T)    
+    sxy[col]  <- sum(temp * thetab[first:last], na.rm = T)
+  }
+  
+  smax <- 0
+  jmax <- 0
+  
+  ss <- ifelse(sxx>0, sxy^2/sxx, 0)
+  smax <- max(ss)
+  jmax <- which(smax == ss)
+  
+  # zabezpieczenie bo moga sie pojawic wiecej niz 1 najwieksze
+  stopifnot(length(jmax) == 1)
+  
+  return(list(ss = ss, smax = smax, jmax = jmax ))
+}
