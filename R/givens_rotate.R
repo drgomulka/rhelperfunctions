@@ -157,7 +157,7 @@ add1_ry <- function(Ry, first, last ) {
   return(list(ss = ss, smax = smax, jmax = jmax ))
 }
 
-ss_ry <- function(Ry)  {
+ss_ry1 <- function(Ry)  {
 
 #     ALGORITHM AS274  APPL. STATIST. (1992) VOL.41, NO. 2
 #     Calculates partial residual sums of squares from an orthogonal
@@ -177,3 +177,17 @@ ss_ry <- function(Ry)  {
    return(list( rss=rss)  )
 }
 
+
+ss_ry <- function(Ry)  {
+   
+   #     ALGORITHM AS274  APPL. STATIST. (1992) VOL.41, NO. 2
+   #     Calculates partial residual sums of squares from an orthogonal
+   #     reduction from AS75.1.
+   
+   stopifnot(is.matrix(Ry))
+   
+   y_column <-  Ry[-1, ncol(Ry) ] 
+   rss <-  y_column^2 |> rev() |> cumsum() |> rev() 
+   
+   return(list( rss=rss)  )
+ }
