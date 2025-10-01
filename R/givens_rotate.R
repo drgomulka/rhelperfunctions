@@ -157,9 +157,11 @@ add1_ry <- function(Ry, first, last ) {
   return(list(ss = ss, smax = smax, jmax = jmax ))
 }
 
+ss_ry <- function(Ry)  {
 
- ss_ry <- function(Ry)  {
-# partial residual sums of squares from an orthogonal reduction
+#     ALGORITHM AS274  APPL. STATIST. (1992) VOL.41, NO. 2
+#     Calculates partial residual sums of squares from an orthogonal
+#     reduction from AS75.1.
 
  nostatnia <- ncol(Ry) 
  np <- nostatnia - 1
@@ -168,14 +170,10 @@ add1_ry <- function(Ry, first, last ) {
  thetab <- Ry[1:(np), nostatnia]
  d <- diag(R)
  
- rss <- rep(0, np )
- 
- rss[np] <- total
-  
-  for ( i in np:2)  {
-    total <- total + d[i]^2  * thetab[i]^2
-    rss[i-1] <- total
-  }
- 
-return(list(rss=rss))
- }
+ temp <- (d^2  * thetab^2)
+ # bez pierwszego
+ temp <- temp[-1:0]
+ rss <-  c(temp, total)  |> rev() |> cumsum() |> rev() 
+   return(list( rss=rss)  )
+}
+
