@@ -191,3 +191,15 @@ ss_ry <- function(Ry)  {
    
    return(list( rss=rss)  )
  }
+
+
+init_subsets_ry  <- function (nvar_max, nbest)  {
+  
+  # ALLOCATE (bound(max_size), ress(max_size,nbest), lopt(lopt_dim1,nbest))
+  lopt_dim1 = nvar_max * (nvar_max + 1) / 2
+  bb <- rep(.Machine$double.xmax, nvar_max)
+  rrr <- matrix (.Machine$double.xmax,  nvar_max, nbest )
+  lll <- matrix (0,  lopt_dim1, nbest )
+  
+  structure(list(bound= bb, ress= rrr, lopt = lll), class="subsets_ry")
+}
