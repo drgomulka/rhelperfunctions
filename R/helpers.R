@@ -12,7 +12,7 @@ reduce_by_sum <- function(x)  {  purrr::reduce (x , `+`)  }
 #'
 #' @examples  repair_fable(df_1, "somevariablename")
 repair_fable <- function(df, varname) {
-  # require(fabletools)
+  require(fabletools)
   temp <- df[[varname]]
   dimnames(temp) <- varname
   df[[varname]]  <- temp
